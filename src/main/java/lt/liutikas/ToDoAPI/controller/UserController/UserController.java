@@ -49,7 +49,7 @@ public class UserController {
         try {
             service.update(user);
         } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already taken");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
         }
     }
 

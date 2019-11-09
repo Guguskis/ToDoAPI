@@ -22,7 +22,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void create(User user) throws DuplicateUserException {
-        if (!exist(user.getUsername())) {
+        if (!exists(user.getUsername())) {
             repository.save(user);
         } else {
             throw new DuplicateUserException();
@@ -31,12 +31,24 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void update(User user) throws UserNotFoundException {
-        if (!exist(user.getUsername())) {
-            repository.save(user);
-        } else {
+        long id = getId(user.getUsername());
+        user.setId(id);
+        repository.save(user);
+    }
+
+    private long getId(String username) throws UserNotFoundException {
+        User user = find(username);
+        return user.getId();
+    }
+
+    private User find(String username) throws UserNotFoundException {
+        User user = repository.findByUsername(username);
+
+        if (user == null) {
             throw new UserNotFoundException();
         }
 
+        return user;
     }
 
     @Override
@@ -48,8 +60,7 @@ public class DefaultUserService implements UserService {
         }
     }
 
-    private boolean exist(String username) {
-        User oldUser = repository.findByUsername(username);
-        return oldUser != null;
+    public boolean exists(String username) {
+        return repository.existsByUsername(username);
     }
 }
