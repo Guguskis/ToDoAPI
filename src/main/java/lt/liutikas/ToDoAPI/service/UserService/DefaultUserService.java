@@ -21,7 +21,17 @@ public class DefaultUserService implements UserService {
         }
     }
 
+    @Override
+    public boolean exist(String username) {
+        try {
+            find(username);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
+    }
 
+    @Override
     public User find(String username) throws EntityNotFoundException {
         User user = repository.findByUsername(username);
 
