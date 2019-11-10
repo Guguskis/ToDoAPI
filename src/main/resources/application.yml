@@ -2,13 +2,10 @@ server:
   port: 8082
 
 spring:
+  datasource:
+    url: jdbc:sqlserver://todoliutikas.database.windows.net:1433;database=ToDoApi;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: MatLiu@todoliutikas
+    password: slaptazodis5%
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.H2Dialect
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true

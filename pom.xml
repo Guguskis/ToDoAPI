@@ -17,17 +17,13 @@
     <description>ToDo application API</description>
 
     <properties>
-        <java.version>13</java.version>
-        <spring.version>2.2.1.RELEASE</spring.version>
-        <h2.version>1.4.200</h2.version>
-        <jaxb-api.version>2.3.1</jaxb-api.version>
-        <junit-jupiter.version>5.5.2</junit-jupiter.version>
-        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
-        <slf4j.version>1.7.29</slf4j.version>
-        <logback.version>1.2.3</logback.version>
-
+        <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+
+        <spring.version>2.2.1.RELEASE</spring.version>
+        <h2.version>1.4.200</h2.version>
+        <sqlserver.version>7.4.1.jre8</sqlserver.version>
     </properties>
 
     <dependencies>
@@ -43,16 +39,24 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!--        databases-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
+            <version>${sqlserver.version}</version>
         </dependency>
     </dependencies>
 
