@@ -1,17 +1,12 @@
 package lt.liutikas.ToDoAPI.controller.UserController;
 
-import lt.liutikas.ToDoAPI.exception.DuplicateUserException;
 import lt.liutikas.ToDoAPI.exception.UserNotFoundException;
 import lt.liutikas.ToDoAPI.model.User;
 import lt.liutikas.ToDoAPI.service.UserService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/person")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -32,35 +27,25 @@ public class UserController {
         return service.findAll();
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody User user) {
-        try {
-            service.create(user);
-        } catch (DuplicateUserException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already taken");
-        }
-
-    }
-
-    @PutMapping
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody User user) {
+    public User find(@PathVariable long id) {
         try {
-            service.update(user);
+            return service.find(id);
         } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
         }
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable("id") long id) {
+    public User find(@PathVariable String username) {
         try {
-            service.delete(id);
+            return service.find(username);
         } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username id is invalid");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
         }
     }
+
 
 }
