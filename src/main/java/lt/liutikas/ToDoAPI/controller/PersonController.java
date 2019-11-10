@@ -1,4 +1,4 @@
-package lt.liutikas.ToDoAPI.controller.PersonController;
+package lt.liutikas.ToDoAPI.controller;
 
 import lt.liutikas.ToDoAPI.exception.DuplicatePersonException;
 import lt.liutikas.ToDoAPI.exception.PersonNotFoundException;
@@ -38,7 +38,7 @@ public class PersonController {
         try {
             service.create(person);
         } catch (DuplicatePersonException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already taken");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class PersonController {
         try {
             service.update(person);
         } catch (PersonNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Person does not exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class PersonController {
         try {
             service.delete(username);
         } catch (PersonNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Person with that username does not exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 

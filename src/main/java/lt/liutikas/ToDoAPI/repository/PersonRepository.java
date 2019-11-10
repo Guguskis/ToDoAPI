@@ -1,4 +1,4 @@
-package lt.liutikas.ToDoAPI.repository.PersonRepository;
+package lt.liutikas.ToDoAPI.repository;
 
 import lt.liutikas.ToDoAPI.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;

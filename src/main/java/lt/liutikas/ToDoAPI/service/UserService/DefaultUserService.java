@@ -2,7 +2,7 @@ package lt.liutikas.ToDoAPI.service.UserService;
 
 import lt.liutikas.ToDoAPI.exception.UserNotFoundException;
 import lt.liutikas.ToDoAPI.model.User;
-import lt.liutikas.ToDoAPI.repository.UserRepository.UserRepository;
+import lt.liutikas.ToDoAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +34,21 @@ public class DefaultUserService implements UserService {
         return user;
     }
 
+    @Override
+    public boolean login(User user) {
+        try {
+            User userInDatabase = find(user.getUsername());
+            return checkCredentials(user, userInDatabase);
+        } catch (UserNotFoundException e) {
+            return false;
+        }
+    }
+
+    private boolean checkCredentials(User user, User userInDatabase) {
+        return user.getUsername().equals(userInDatabase.getUsername())
+                && user.getPassword().equals(userInDatabase.getPassword());
+    }
+
 
     @Override
     public User find(long id) throws UserNotFoundException {
@@ -46,7 +61,4 @@ public class DefaultUserService implements UserService {
         return user;
     }
 
-    public boolean exists(String username) {
-        return repository.existsByUsername(username);
-    }
 }

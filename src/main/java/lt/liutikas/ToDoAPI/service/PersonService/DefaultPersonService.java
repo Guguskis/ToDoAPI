@@ -3,9 +3,9 @@ package lt.liutikas.ToDoAPI.service.PersonService;
 import lt.liutikas.ToDoAPI.exception.DuplicatePersonException;
 import lt.liutikas.ToDoAPI.exception.PersonNotFoundException;
 import lt.liutikas.ToDoAPI.model.Person;
-import lt.liutikas.ToDoAPI.repository.PersonRepository.PersonRepository;
+import lt.liutikas.ToDoAPI.repository.PersonRepository;
+import lt.liutikas.ToDoAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,19 +13,31 @@ import java.util.List;
 @Service
 public class DefaultPersonService implements PersonService {
     @Autowired
-    private PersonRepository repository;
+    private PersonRepository personRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     public List<Person> findAll() {
-        return repository.findAll();
+        return personRepository.findAll();
     }
 
     @Override
     public void create(Person person) throws DuplicatePersonException {
+        if (exists(person.getUsername())) {
+            throw new DuplicatePersonException("username is taken");
+        } else {
+            personRepository.save(person);
+        }
+    }
+
+    public boolean exists(String username) {
         try {
-            repository.save(person);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicatePersonException();
+            find(username);
+            return true;
+        } catch (PersonNotFoundException e) {
+            return false;
         }
     }
 
@@ -33,17 +45,12 @@ public class DefaultPersonService implements PersonService {
     public void update(Person person) throws PersonNotFoundException {
         Person existingPerson = find(person.getUsername());
         person.setId(existingPerson.getId());
-        repository.save(person);
-    }
-
-    @Override
-    public void delete(String username) throws PersonNotFoundException {
-        var personToDelete = find(username);
-        repository.delete(personToDelete);
+        userRepository.save(person);
+        personRepository.save(person);
     }
 
     public Person find(String username) throws PersonNotFoundException {
-        Person person = repository.findByUsername(username);
+        Person person = personRepository.findByUsername(username);
 
         if (person == null) {
             throw new PersonNotFoundException();
@@ -52,5 +59,10 @@ public class DefaultPersonService implements PersonService {
         return person;
     }
 
+    @Override
+    public void delete(String username) throws PersonNotFoundException {
+        var personToDelete = find(username);
+        personRepository.delete(personToDelete);
+    }
 
 }

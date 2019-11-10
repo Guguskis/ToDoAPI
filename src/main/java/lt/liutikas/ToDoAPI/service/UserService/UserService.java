@@ -11,4 +11,6 @@ public interface UserService {
     User find(long id) throws UserNotFoundException;
 
     User find(String username) throws UserNotFoundException;
+
+    boolean login(User user);
 }
