@@ -2,8 +2,8 @@ package lt.liutikas.ToDoAPI.controller;
 
 import lt.liutikas.ToDoAPI.exception.DuplicateEntityException;
 import lt.liutikas.ToDoAPI.exception.EntityNotFoundException;
-import lt.liutikas.ToDoAPI.model.Person;
-import lt.liutikas.ToDoAPI.service.PersonService.PersonService;
+import lt.liutikas.ToDoAPI.model.Company;
+import lt.liutikas.ToDoAPI.service.CompanyService.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,23 +20,23 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/person")
-public class PersonController {
+@RequestMapping("/api/company")
+public class CompanyController {
 
     @Autowired
-    PersonService service;
+    private CompanyService service;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Person> findAll() {
+    public List<Company> findAll() {
         return service.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody Person person) {
+    public void create(@RequestBody Company company) {
         try {
-            service.create(person);
+            service.create(company);
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -44,9 +44,9 @@ public class PersonController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody Person person) {
+    public void update(@RequestBody Company company) {
         try {
-            service.update(person);
+            service.update(company);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -61,5 +61,4 @@ public class PersonController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-
 }

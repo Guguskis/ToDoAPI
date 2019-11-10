@@ -1,10 +1,12 @@
 package lt.liutikas.ToDoAPI;
 
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@Configurable
+@Configuration
 @EnableWebMvc
+@EntityScan
 public class WebConfig {
 
 }
