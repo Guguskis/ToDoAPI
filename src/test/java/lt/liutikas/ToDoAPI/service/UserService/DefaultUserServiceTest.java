@@ -49,4 +49,16 @@ class DefaultUserServiceTest {
 
         assertEquals(false, actual);
     }
+
+    @Test
+    void verify_NonexistentUser_ReturnsFalse() {
+        String username = "John";
+        String password = "admin";
+        when(repository.findByUsername(username))
+                .thenAnswer(invocationOnMock -> null);
+
+        boolean actual = service.verify(new User(username, password));
+
+        assertEquals(false, actual);
+    }
 }

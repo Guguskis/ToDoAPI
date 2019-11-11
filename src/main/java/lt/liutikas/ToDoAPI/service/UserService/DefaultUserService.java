@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultUserService implements UserService {
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     @Override
     public boolean verify(User user) {
