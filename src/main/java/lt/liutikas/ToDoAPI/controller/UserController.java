@@ -21,10 +21,16 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @PostMapping("/login")
+    @PostMapping("/verify")
     @ResponseStatus(HttpStatus.OK)
-    public boolean login(@RequestBody User user) {
-        return service.login(user);
+    public boolean verify(@RequestBody User user) {
+        return service.verify(user);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public User find(@PathVariable long id) {
+        return service.find(id);
     }
 
     @GetMapping("/exist/{username}")

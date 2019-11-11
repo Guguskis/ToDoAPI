@@ -12,20 +12,10 @@ public class DefaultUserService implements UserService {
     UserRepository repository;
 
     @Override
-    public boolean login(User user) {
+    public boolean verify(User user) {
         try {
             User userInDatabase = find(user.getUsername());
             return verificationIsSuccessful(user, userInDatabase);
-        } catch (EntityNotFoundException e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean exist(String username) {
-        try {
-            find(username);
-            return true;
         } catch (EntityNotFoundException e) {
             return false;
         }
@@ -40,6 +30,11 @@ public class DefaultUserService implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public User find(long id) {
+        return repository.findById(id);
     }
 
 
