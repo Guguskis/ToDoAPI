@@ -1,26 +1,34 @@
 package lt.liutikas.todoapi.service.UserService;
 
+import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
+import lt.liutikas.todoapi.model.Project;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lt.liutikas.todoapi.service.ProjectUserService.ProjectUserService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class DefaultUserService implements UserService {
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository userRepository;
+    private final ProjectUserService projectUserService;
+
+    public DefaultUserService(UserRepository userRepository, ProjectUserService projectUserService) {
+        this.userRepository = userRepository;
+        this.projectUserService = projectUserService;
+    }
 
     @Override
     public boolean verify(User user) {
         try {
-            User userInDatabase = find(user.getUsername());
+            User userInDatabase = findUser(user.getUsername());
             return verificationIsSuccessful(user, userInDatabase);
         } catch (EntityNotFoundException e) {
             return false;
@@ -28,14 +36,14 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public User find(String username) throws EntityNotFoundException {
-        User user = repository.findByUsername(username);
+    public User findUser(String username) throws EntityNotFoundException {
+        User user = userRepository.findByUsername(username);
         return checkExceptions(user);
     }
 
     @Override
-    public User find(long id) throws EntityNotFoundException {
-        User user = repository.findById(id);
+    public User findUser(long id) throws EntityNotFoundException {
+        User user = userRepository.findById(id);
         return checkExceptions(user);
     }
 
@@ -50,7 +58,7 @@ public class DefaultUserService implements UserService {
     @Override
     public void create(Person person) throws DuplicateEntityException {
         try {
-            repository.save(person);
+            userRepository.save(person);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntityException("username is taken");
         }
@@ -59,7 +67,7 @@ public class DefaultUserService implements UserService {
     @Override
     public void create(Company company) throws DuplicateEntityException {
         try {
-            repository.save(company);
+            userRepository.save(company);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntityException("username is taken");
         }
@@ -67,7 +75,27 @@ public class DefaultUserService implements UserService {
 
     @Override
     public List<User> findAll() {
-        return repository.findAll();
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
+        return getSimplifiedProjectDtos(findUser(username));
+    }
+
+    private List<SimplifiedProjectDto> getSimplifiedProjectDtos(User user) throws EntityNotFoundException {
+        List<SimplifiedProjectDto> projectsDtos = new ArrayList<>();
+
+        List<Project> projects = projectUserService.findProjects(user.getId());
+        for (Project project : projects) {
+            SimplifiedProjectDto dto = new SimplifiedProjectDto();
+            dto.setId(project.getId());
+            dto.setName(project.getName());
+            String owner = findUser(project.getOwnerId()).getUsername();
+            dto.setOwner(owner);
+            projectsDtos.add(dto);
+        }
+        return projectsDtos;
     }
 
     private boolean verificationIsSuccessful(User user, User userInDatabase) {

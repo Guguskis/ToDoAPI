@@ -63,8 +63,4 @@ class DefaultUserServiceTest {
         assertFalse(actual);
     }
 
-    @Test
-    void create_Company_IsCreated() {
-
-    }
 }

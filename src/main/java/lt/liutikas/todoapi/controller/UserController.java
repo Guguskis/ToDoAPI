@@ -1,12 +1,12 @@
 package lt.liutikas.todoapi.controller;
 
+import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.service.UserService.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,15 +23,17 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
+
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @PostMapping("/verify")
     @ResponseStatus(HttpStatus.OK)
     public boolean verify(@RequestBody User user) {
         return service.verify(user);
     }
-
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -43,7 +45,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User find(@PathVariable long id) {
         try {
-            return service.find(id);
+            return service.findUser(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -53,7 +55,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User find(@PathVariable String username) {
         try {
-            return service.find(username);
+            return service.findUser(username);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @GetMapping("/projects/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SimplifiedProjectDto> findProjects(@PathVariable String username) {
+        try {
+            return service.findProjects(username);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -78,5 +90,4 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-
 }
