@@ -24,9 +24,17 @@
         <spring.version>2.2.1.RELEASE</spring.version>
         <h2.version>1.4.200</h2.version>
         <sqlserver.version>7.4.1.jre8</sqlserver.version>
+        <springfox-swagger.version>2.4.0</springfox-swagger.version>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>${spring.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -58,6 +66,19 @@
             <scope>runtime</scope>
             <version>${sqlserver.version}</version>
         </dependency>
+
+        <!--        Interactive API documentation-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
