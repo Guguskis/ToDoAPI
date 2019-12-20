@@ -1,11 +1,13 @@
 package lt.liutikas.todoapi.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
 import lt.liutikas.todoapi.model.User;
+import lt.liutikas.todoapi.service.ProjectUserService.ProjectUserService;
 import lt.liutikas.todoapi.service.UserService.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +26,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
+    private final ProjectUserService projectsService;
 
-    public UserController(UserService service) {
+    public UserController(UserService service, ProjectUserService projectsService) {
         this.service = service;
+        this.projectsService = projectsService;
     }
 
     @PostMapping("/verify")
@@ -37,6 +41,7 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Returns all available users", notes = "Throwaway")
     public List<User> findAll() {
         return service.findAll();
     }
@@ -69,6 +74,12 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+    }
+
+    @GetMapping("/project/{projectId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> findUsers(@PathVariable long projectId) {
+        return projectsService.findMembers(projectId);
     }
 
     @PostMapping("/person")

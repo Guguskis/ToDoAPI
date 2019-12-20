@@ -24,10 +24,6 @@ public class DefaultProjectUserService implements ProjectUserService {
         this.projectRepository = projectRepository;
     }
 
-    @Override
-    public List<ProjectUser> findAll() {
-        return projectUserRepository.findAll();
-    }
 
     @Override
     public List<Project> findProjects(long userId) {

@@ -38,7 +38,7 @@ public class ProjectController {
         }
     }
 
-    @PostMapping("/{projectId}")
+    @PostMapping("/addMember/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public void addUser(@PathVariable long projectId, @RequestBody String username) {
         try {
