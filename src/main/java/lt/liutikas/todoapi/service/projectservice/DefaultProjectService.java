@@ -2,14 +2,17 @@ package lt.liutikas.todoapi.service.projectservice;
 
 import lt.liutikas.todoapi.dto.CreateProjectDto;
 import lt.liutikas.todoapi.dto.SessionUserDto;
+import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.ProjectRepository;
 import lt.liutikas.todoapi.repository.UserRepository;
 import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
+import lt.liutikas.todoapi.service.userservice.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,11 +22,13 @@ public class DefaultProjectService implements ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectUserService projectUserService;
+    private final UserService userService;
 
-    public DefaultProjectService(ProjectRepository repository, UserRepository userRepository, ProjectUserService projectUserService) {
+    public DefaultProjectService(ProjectRepository repository, UserRepository userRepository, ProjectUserService projectUserService, UserService userService) {
         this.projectRepository = repository;
         this.userRepository = userRepository;
         this.projectUserService = projectUserService;
+        this.userService = userService;
     }
 
     @Override
@@ -89,6 +94,31 @@ public class DefaultProjectService implements ProjectService {
         SessionUserDto dto = new SessionUserDto();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
+        return dto;
+    }
+
+    @Override
+    public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
+        return getSimplifiedProjectDtos(userService.findUser(username));
+    }
+
+    private List<SimplifiedProjectDto> getSimplifiedProjectDtos(User user) throws EntityNotFoundException {
+        List<SimplifiedProjectDto> projectsDto = new ArrayList<>();
+
+        List<Project> projects = projectUserService.findProjects(user.getId());
+        for (Project project : projects) {
+            projectsDto.add(getSimplifiedProjectDto(project));
+        }
+        return projectsDto;
+    }
+
+    private SimplifiedProjectDto getSimplifiedProjectDto(Project project) throws EntityNotFoundException {
+        SimplifiedProjectDto dto = new SimplifiedProjectDto();
+        String owner = userService.findUser(project.getOwnerId()).getUsername();
+        dto.setId(project.getId());
+        dto.setName(project.getName());
+        dto.setOwner(owner);
+        dto.setMemberCount(project.getMembers().size());
         return dto;
     }
 }

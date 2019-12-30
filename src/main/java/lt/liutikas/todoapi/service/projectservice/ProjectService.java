@@ -2,6 +2,7 @@ package lt.liutikas.todoapi.service.projectservice;
 
 import lt.liutikas.todoapi.dto.CreateProjectDto;
 import lt.liutikas.todoapi.dto.SessionUserDto;
+import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
 
@@ -17,4 +18,6 @@ public interface ProjectService {
     List<SessionUserDto> findMembers(long projectId);
 
     List<Project> find(String username);
+
+    List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException;
 }

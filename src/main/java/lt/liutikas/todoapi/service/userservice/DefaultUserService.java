@@ -1,18 +1,15 @@
 package lt.liutikas.todoapi.service.userservice;
 
-import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
-import lt.liutikas.todoapi.model.Project;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.UserRepository;
 import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,11 +79,6 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
-        return getSimplifiedProjectDtos(findUser(username));
-    }
-
-    @Override
     public void update(Person person) {
         userRepository.save(person);
     }
@@ -94,21 +86,6 @@ public class DefaultUserService implements UserService {
     @Override
     public void update(Company company) {
         userRepository.save(company);
-    }
-
-    private List<SimplifiedProjectDto> getSimplifiedProjectDtos(User user) throws EntityNotFoundException {
-        List<SimplifiedProjectDto> projectsDtos = new ArrayList<>();
-
-        List<Project> projects = projectUserService.findProjects(user.getId());
-        for (Project project : projects) {
-            SimplifiedProjectDto dto = new SimplifiedProjectDto();
-            dto.setId(project.getId());
-            dto.setName(project.getName());
-            String owner = findUser(project.getOwnerId()).getUsername();
-            dto.setOwner(owner);
-            projectsDtos.add(dto);
-        }
-        return projectsDtos;
     }
 
     private boolean verificationIsSuccessful(User user, User userInDatabase) {

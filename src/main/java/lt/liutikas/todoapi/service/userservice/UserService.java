@@ -1,6 +1,5 @@
 package lt.liutikas.todoapi.service.userservice;
 
-import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
@@ -22,8 +21,6 @@ public interface UserService {
     void create(Company company) throws DuplicateEntityException;
 
     List<User> findAll();
-
-    List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException;
 
     void update(Person person);
 

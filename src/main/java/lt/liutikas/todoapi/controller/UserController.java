@@ -1,6 +1,5 @@
 package lt.liutikas.todoapi.controller;
 
-import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
@@ -53,22 +52,6 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-    }
-
-    @GetMapping("/projects/{username}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<SimplifiedProjectDto> findProjects(@PathVariable String username) {
-        try {
-            return service.findProjects(username);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
-
-    @GetMapping("/project/{projectId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> findUsers(@PathVariable long projectId) {
-        return projectsService.findMembers(projectId);
     }
 
     @PostMapping("/person")
