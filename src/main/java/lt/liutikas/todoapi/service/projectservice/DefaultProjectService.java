@@ -1,7 +1,7 @@
 package lt.liutikas.todoapi.service.projectservice;
 
 import lt.liutikas.todoapi.dto.CreateProjectDto;
-import lt.liutikas.todoapi.dto.SimplifiedUserDto;
+import lt.liutikas.todoapi.dto.SessionUserDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
 import lt.liutikas.todoapi.model.User;
@@ -10,9 +10,9 @@ import lt.liutikas.todoapi.repository.UserRepository;
 import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DefaultProjectService implements ProjectService {
@@ -28,10 +28,10 @@ public class DefaultProjectService implements ProjectService {
 
     @Override
     public void addUser(long projectId, String username) throws EntityNotFoundException {
-        User user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         Optional<Project> project = projectRepository.findById(projectId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new EntityNotFoundException("User was not found.");
         } else if (project.isEmpty()) {
             throw new EntityNotFoundException("Project was not found.");
@@ -43,15 +43,15 @@ public class DefaultProjectService implements ProjectService {
 
     @Override
     public void create(CreateProjectDto dto) throws EntityNotFoundException {
-        User user = userRepository.findByUsername(dto.getOwnerUsername());
+        Optional<User> user = userRepository.findByUsername(dto.getOwnerUsername());
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new EntityNotFoundException("User does not exist");
         }
 
         Project project = new Project();
         project.setName(dto.getName());
-        project.setOwnerId(user.getId());
+        project.setOwnerId(user.get().getId());
 //        project.getMembers().add(user);
 
         projectRepository.save(project);
@@ -63,16 +63,32 @@ public class DefaultProjectService implements ProjectService {
     }
 
     @Override
-    public List<SimplifiedUserDto> findMembers(long projectId) {
+    public List<SessionUserDto> findMembers(long projectId) {
         List<User> members = projectUserService.findMembers(projectId);
-        List<SimplifiedUserDto> memberDtos = new ArrayList<>();
 
-        for (User member : members) {
-            SimplifiedUserDto dto = new SimplifiedUserDto();
-            dto.setId(member.getId());
-            dto.setUsername(member.getUsername());
-            memberDtos.add(dto);
-        }
-        return memberDtos;
+        return members
+                .stream()
+                .map(this::getSimplifiedUserDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Project> find(String username) {
+        Optional<User> owner = userRepository.findByUsername(username);
+        List<Project> projects = projectRepository.findAll();
+
+        projects = projects
+                .stream()
+                .filter(project -> project.getOwnerId() == owner.get().getId())
+                .collect(Collectors.toList());
+
+        return projects;
+    }
+
+    private SessionUserDto getSimplifiedUserDto(User user) {
+        SessionUserDto dto = new SessionUserDto();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        return dto;
     }
 }

@@ -2,7 +2,7 @@ package lt.liutikas.todoapi.controller;
 
 import io.swagger.annotations.Api;
 import lt.liutikas.todoapi.dto.CreateProjectDto;
-import lt.liutikas.todoapi.dto.SimplifiedUserDto;
+import lt.liutikas.todoapi.dto.SessionUserDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
 import lt.liutikas.todoapi.service.projectservice.ProjectService;
@@ -52,7 +52,7 @@ public class ProjectController {
 
     @GetMapping("/members/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SimplifiedUserDto> findMembers(@PathVariable long projectId) {
+    public List<SessionUserDto> findMembers(@PathVariable long projectId) {
         return service.findMembers(projectId);
     }
 
@@ -60,5 +60,11 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.OK)
     public List<Project> findAll() {
         return service.findAll();
+    }
+
+    @GetMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Project> findAll(@PathVariable String username) {
+        return service.find(username);
     }
 }

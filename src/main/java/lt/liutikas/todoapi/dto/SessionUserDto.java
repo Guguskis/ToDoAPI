@@ -1,6 +1,6 @@
 package lt.liutikas.todoapi.dto;
 
-public class SimplifiedUserDto {
+public class SessionUserDto {
     private long id;
     private String username;
 

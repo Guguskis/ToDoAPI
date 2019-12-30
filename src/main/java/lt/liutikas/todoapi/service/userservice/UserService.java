@@ -16,6 +16,7 @@ public interface UserService {
 
     User findUser(long id) throws EntityNotFoundException;
 
+
     void create(Person person) throws DuplicateEntityException;
 
     void create(Company company) throws DuplicateEntityException;
@@ -23,4 +24,8 @@ public interface UserService {
     List<User> findAll();
 
     List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException;
+
+    void update(Person person);
+
+    void update(Company company);
 }

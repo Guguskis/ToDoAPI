@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultProjectUserService implements ProjectUserService {
@@ -45,9 +46,8 @@ public class DefaultProjectUserService implements ProjectUserService {
         List<User> mappedUsers = new ArrayList<>();
 
         for (ProjectUser unmappedUser : unmappedUsers) {
-            long userId = unmappedUser.getUserId();
-            User user = userRepository.findById(userId);
-            mappedUsers.add(user);
+            Optional<User> user = userRepository.findById(unmappedUser.getUserId());
+            mappedUsers.add(user.get());
         }
 
         return mappedUsers;

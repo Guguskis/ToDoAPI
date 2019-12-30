@@ -1,7 +1,5 @@
 package lt.liutikas.todoapi.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
@@ -14,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,7 +23,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
-@Api(tags = "user")
 public class UserController {
 
     private final UserService service;
@@ -43,19 +41,8 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Returns all available users", notes = "Throwaway")
     public List<User> findAll() {
         return service.findAll();
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public User find(@PathVariable long id) {
-        try {
-            return service.findUser(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
     }
 
     @GetMapping("/{username}")
@@ -103,4 +90,17 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+    @PutMapping("/person")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody Person person) {
+        service.update(person);
+    }
+
+    @PutMapping("/company")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody Company company) {
+        service.update(company);
+    }
+
 }

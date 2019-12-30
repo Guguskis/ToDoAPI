@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultUserService implements UserService {
@@ -26,10 +27,10 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public boolean verify(User user) {
+    public boolean verify(User userToVerify) {
         try {
-            User userInDatabase = findUser(user.getUsername());
-            return verificationIsSuccessful(user, userInDatabase);
+            User userInDatabase = findUser(userToVerify.getUsername());
+            return verificationIsSuccessful(userToVerify, userInDatabase);
         } catch (EntityNotFoundException e) {
             return false;
         }
@@ -37,22 +38,24 @@ public class DefaultUserService implements UserService {
 
     @Override
     public User findUser(String username) throws EntityNotFoundException {
-        User user = userRepository.findByUsername(username);
-        return checkExceptions(user);
+        Optional<User> user = userRepository.findByUsername(username);
+
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("user not found");
+        }
+
+        return user.get();
     }
 
     @Override
     public User findUser(long id) throws EntityNotFoundException {
-        User user = userRepository.findById(id);
-        return checkExceptions(user);
-    }
+        Optional<User> user = userRepository.findById(id);
 
-    private User checkExceptions(User user) throws EntityNotFoundException {
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new EntityNotFoundException("user not found");
         }
 
-        return user;
+        return user.get();
     }
 
     @Override
@@ -81,6 +84,17 @@ public class DefaultUserService implements UserService {
     @Override
     public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
         return getSimplifiedProjectDtos(findUser(username));
+    }
+
+    @Override
+    public void update(Person person) {
+        userRepository.save(person);
+        //Todo just have one update for User
+    }
+
+    @Override
+    public void update(Company company) {
+        userRepository.save(company);
     }
 
     private List<SimplifiedProjectDto> getSimplifiedProjectDtos(User user) throws EntityNotFoundException {
