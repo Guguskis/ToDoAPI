@@ -1,4 +1,4 @@
-package lt.liutikas.todoapi.service.ProjectUserService;
+package lt.liutikas.todoapi.service.projectuserservice;
 
 import lt.liutikas.todoapi.dto.CreateProjectUserDto;
 import lt.liutikas.todoapi.model.Project;

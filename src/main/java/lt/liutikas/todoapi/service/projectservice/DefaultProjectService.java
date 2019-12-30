@@ -1,13 +1,13 @@
-package lt.liutikas.todoapi.service.ProjectService;
+package lt.liutikas.todoapi.service.projectservice;
 
 import lt.liutikas.todoapi.dto.CreateProjectDto;
+import lt.liutikas.todoapi.dto.SimplifiedUserDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
-import lt.liutikas.todoapi.model.SimplifiedUserDto;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.ProjectRepository;
 import lt.liutikas.todoapi.repository.UserRepository;
-import lt.liutikas.todoapi.service.ProjectUserService.ProjectUserService;
+import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

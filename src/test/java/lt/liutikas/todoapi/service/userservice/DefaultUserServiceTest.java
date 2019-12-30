@@ -1,4 +1,4 @@
-package lt.liutikas.todoapi.service.UserService;
+package lt.liutikas.todoapi.service.userservice;
 
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.UserRepository;
@@ -22,7 +22,6 @@ class DefaultUserServiceTest {
     private UserRepository repository;
     @Autowired
     private UserService service;
-
 
     @Test
     void verify_CorrectCredentials_ReturnsTrue() {

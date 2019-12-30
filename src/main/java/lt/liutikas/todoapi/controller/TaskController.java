@@ -2,7 +2,7 @@ package lt.liutikas.todoapi.controller;
 
 import lt.liutikas.todoapi.dto.CreateTaskDTO;
 import lt.liutikas.todoapi.model.Task;
-import lt.liutikas.todoapi.service.TaskService.TaskService;
+import lt.liutikas.todoapi.service.taskservice.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

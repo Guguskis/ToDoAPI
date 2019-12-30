@@ -1,4 +1,4 @@
-package lt.liutikas.todoapi.service.PersonService;
+package lt.liutikas.todoapi.service.personservice;
 
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;

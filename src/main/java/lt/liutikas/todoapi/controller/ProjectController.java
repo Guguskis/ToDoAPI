@@ -1,10 +1,11 @@
 package lt.liutikas.todoapi.controller;
 
+import io.swagger.annotations.Api;
 import lt.liutikas.todoapi.dto.CreateProjectDto;
+import lt.liutikas.todoapi.dto.SimplifiedUserDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
-import lt.liutikas.todoapi.model.SimplifiedUserDto;
-import lt.liutikas.todoapi.service.ProjectService.ProjectService;
+import lt.liutikas.todoapi.service.projectservice.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/project")
+@Api(tags = "project")
 public class ProjectController {
     private final ProjectService service;
 

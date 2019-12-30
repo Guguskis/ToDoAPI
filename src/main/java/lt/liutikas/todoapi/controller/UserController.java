@@ -1,5 +1,6 @@
 package lt.liutikas.todoapi.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
@@ -7,8 +8,8 @@ import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
 import lt.liutikas.todoapi.model.User;
-import lt.liutikas.todoapi.service.ProjectUserService.ProjectUserService;
-import lt.liutikas.todoapi.service.UserService.UserService;
+import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
+import lt.liutikas.todoapi.service.userservice.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
+@Api(tags = "user")
 public class UserController {
 
     private final UserService service;

@@ -1,4 +1,4 @@
-package lt.liutikas.todoapi.model;
+package lt.liutikas.todoapi.dto;
 
 public class SimplifiedUserDto {
     private long id;

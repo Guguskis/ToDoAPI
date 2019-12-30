@@ -1,4 +1,4 @@
-package lt.liutikas.todoapi.service.UserService;
+package lt.liutikas.todoapi.service.userservice;
 
 import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;

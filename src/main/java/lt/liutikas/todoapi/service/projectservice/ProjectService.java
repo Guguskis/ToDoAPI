@@ -1,9 +1,9 @@
-package lt.liutikas.todoapi.service.ProjectService;
+package lt.liutikas.todoapi.service.projectservice;
 
 import lt.liutikas.todoapi.dto.CreateProjectDto;
+import lt.liutikas.todoapi.dto.SimplifiedUserDto;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
-import lt.liutikas.todoapi.model.SimplifiedUserDto;
 
 import java.util.List;
 

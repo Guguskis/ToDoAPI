@@ -1,7 +1,7 @@
 package lt.liutikas.todoapi.controller;
 
 import lt.liutikas.todoapi.dto.CreateProjectUserDto;
-import lt.liutikas.todoapi.service.ProjectUserService.ProjectUserService;
+import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

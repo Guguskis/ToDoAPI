@@ -1,4 +1,4 @@
-package lt.liutikas.todoapi.service.TaskService;
+package lt.liutikas.todoapi.service.taskservice;
 
 import lt.liutikas.todoapi.controller.UserController;
 import lt.liutikas.todoapi.dto.CreateTaskDTO;
