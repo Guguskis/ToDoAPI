@@ -89,7 +89,6 @@ public class DefaultUserService implements UserService {
     @Override
     public void update(Person person) {
         userRepository.save(person);
-        //Todo just have one update for User
     }
 
     @Override
