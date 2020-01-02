@@ -1,15 +1,19 @@
 package lt.liutikas.todoapi.dto;
 
-public class CreateProjectDto {
-    private String name;
-    private String ownerUsername;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String getName() {
-        return name;
+public class CreateProjectDto {
+    private String projectName;
+    private String ownerUsername;
+    private List<String> members = new ArrayList<>();
+
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public String getOwnerUsername() {
@@ -18,5 +22,13 @@ public class CreateProjectDto {
 
     public void setOwnerUsername(String ownerUsername) {
         this.ownerUsername = ownerUsername;
+    }
+
+    public List<String> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<String> members) {
+        this.members = members;
     }
 }

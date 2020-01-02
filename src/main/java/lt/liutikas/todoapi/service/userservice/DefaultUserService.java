@@ -6,7 +6,6 @@ import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.UserRepository;
-import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,9 @@ import java.util.Optional;
 @Service
 public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
-    private final ProjectUserService projectUserService;
 
-    public DefaultUserService(UserRepository userRepository, ProjectUserService projectUserService) {
+    public DefaultUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.projectUserService = projectUserService;
     }
 
     @Override
@@ -49,7 +46,7 @@ public class DefaultUserService implements UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("user not found");
+            throw new EntityNotFoundException("User not found");
         }
 
         return user.get();
@@ -60,7 +57,7 @@ public class DefaultUserService implements UserService {
         try {
             userRepository.save(person);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateEntityException("username is taken");
+            throw new DuplicateEntityException("Username is taken");
         }
     }
 

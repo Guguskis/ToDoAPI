@@ -1,5 +1,7 @@
 package lt.liutikas.todoapi.model;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.List;
 
@@ -19,7 +22,6 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private long id;
 
     @Column(unique = true)
@@ -27,9 +29,14 @@ public class User {
     private String password;
     private boolean deleted;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<ProjectUser> projects;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "project_member",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")}
+    )
+    @AttributeOverride(name = "projects", column = @Column(updatable = true))
+    private List<Project> projects;
 
     public User() {
     }
@@ -71,11 +78,15 @@ public class User {
         this.deleted = deleted;
     }
 
-    public List<ProjectUser> getProjects() {
+    public List<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<ProjectUser> projects) {
+    public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    public void addProject(Project project) {
+        this.projects.add(project);
     }
 }

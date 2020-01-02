@@ -1,14 +1,14 @@
 package lt.liutikas.todoapi.model;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +21,8 @@ public class Project {
     private String name;
     private long ownerId;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
-    private List<ProjectUser> members = new ArrayList<>();
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private List<User> members = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -49,11 +48,15 @@ public class Project {
         this.ownerId = ownerId;
     }
 
-    public List<ProjectUser> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<ProjectUser> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
+    }
+
+    public void addMember(User member) {
+        this.members.add(member);
     }
 }

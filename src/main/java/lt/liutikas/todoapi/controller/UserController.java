@@ -5,7 +5,6 @@ import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
 import lt.liutikas.todoapi.model.Person;
 import lt.liutikas.todoapi.model.User;
-import lt.liutikas.todoapi.service.projectuserservice.ProjectUserService;
 import lt.liutikas.todoapi.service.userservice.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +24,9 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
-    private final ProjectUserService projectsService;
 
-    public UserController(UserService service, ProjectUserService projectsService) {
+    public UserController(UserService service) {
         this.service = service;
-        this.projectsService = projectsService;
     }
 
     @PostMapping("/verify")

@@ -1,6 +1,7 @@
 package lt.liutikas.todoapi.controller;
 
 import io.swagger.annotations.Api;
+import lt.liutikas.todoapi.dto.AddMemberToProjectDto;
 import lt.liutikas.todoapi.dto.CreateProjectDto;
 import lt.liutikas.todoapi.dto.SessionUserDto;
 import lt.liutikas.todoapi.dto.SimplifiedProjectDto;
@@ -41,11 +42,11 @@ public class ProjectController {
         }
     }
 
-    @PostMapping("/addMember/{projectId}")
+    @PostMapping("/addMember")
     @ResponseStatus(HttpStatus.OK)
-    public void addUser(@PathVariable long projectId, @RequestBody String username) {
+    public void addUser(@RequestBody AddMemberToProjectDto dto) {
         try {
-            service.addUser(projectId, username);
+            service.addMember(dto);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -54,7 +55,11 @@ public class ProjectController {
     @GetMapping("/members/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<SessionUserDto> findMembers(@PathVariable long projectId) {
-        return service.findMembers(projectId);
+        try {
+            return service.findMembers(projectId);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping
