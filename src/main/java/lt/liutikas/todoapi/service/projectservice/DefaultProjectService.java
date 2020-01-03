@@ -144,7 +144,8 @@ public class DefaultProjectService implements ProjectService {
     public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
         List<SimplifiedProjectDto> projectsDto = new ArrayList<>();
 
-        List<Project> projects = userService.findUser(username).getProjects();
+        User owner = userService.findUser(username);
+        List<Project> projects = projectRepository.findByOwnerId(owner.getId());
         for (Project project : projects) {
             projectsDto.add(getSimplifiedProjectDto(project));
         }
