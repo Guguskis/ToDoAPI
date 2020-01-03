@@ -47,7 +47,8 @@ public class DefaultProjectService implements ProjectService {
     @Override
     public void create(CreateProjectDto dto) throws EntityNotFoundException {
         User owner = tryGetUser(dto.getOwnerUsername());
-        List<User> members = tryGetMembers(dto, owner);
+        List<User> members = tryGetMembers(dto.getMembers());
+        members.add(owner);
         Project project = getProject(dto, owner, members);
 
         projectRepository.save(project);
@@ -64,12 +65,11 @@ public class DefaultProjectService implements ProjectService {
         return project;
     }
 
-    private List<User> tryGetMembers(CreateProjectDto dto, User owner) throws EntityNotFoundException {
+    private List<User> tryGetMembers(List<String> usernames) throws EntityNotFoundException {
         List<User> members = new ArrayList<>();
-        members.add(owner);
 
         List<String> membersNotFound = new ArrayList<>();
-        for (String memberUsername : dto.getMembers()) {
+        for (String memberUsername : usernames) {
             Optional<User> member = userRepository.findByUsername(memberUsername);
             if (member.isEmpty()) {
                 membersNotFound.add(memberUsername);
@@ -80,7 +80,7 @@ public class DefaultProjectService implements ProjectService {
 
         if (!membersNotFound.isEmpty()) {
             StringBuilder builder = new StringBuilder();
-            builder.append("These usernames were not found: ");
+            builder.append("These members were not found: ");
             builder.append(String.join(", ", membersNotFound));
             throw new EntityNotFoundException(builder.toString());
         }
@@ -142,17 +142,33 @@ public class DefaultProjectService implements ProjectService {
 
     @Override
     public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
-        return getSimplifiedProjectsDto(userService.findUser(username));
-    }
-
-    private List<SimplifiedProjectDto> getSimplifiedProjectsDto(User user) throws EntityNotFoundException {
         List<SimplifiedProjectDto> projectsDto = new ArrayList<>();
 
-        List<Project> projects = user.getProjects();
+        List<Project> projects = userService.findUser(username).getProjects();
         for (Project project : projects) {
             projectsDto.add(getSimplifiedProjectDto(project));
         }
         return projectsDto;
+    }
+
+    @Override
+    public void delete(long id) {
+        projectRepository.deleteById(id);
+    }
+
+    @Override
+    public void update(SimplifiedProjectDto dto) throws EntityNotFoundException {
+        projectRepository.save(getProject(dto));
+    }
+
+    private Project getProject(SimplifiedProjectDto dto) throws EntityNotFoundException {
+        Project project = new Project();
+        project.setId(dto.getId());
+        project.setName(dto.getName());
+        User owner = tryGetUser(dto.getOwner());
+        project.setOwnerId(owner.getId());
+        project.setMembers(tryGetMembers(dto.getMembers()));
+        return project;
     }
 
     private SimplifiedProjectDto getSimplifiedProjectDto(Project project) throws EntityNotFoundException {
@@ -161,7 +177,11 @@ public class DefaultProjectService implements ProjectService {
         dto.setId(project.getId());
         dto.setName(project.getName());
         dto.setOwner(owner);
-        dto.setMemberCount(project.getMembers().size());
+        dto.setMembers(project
+                .getMembers()
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList()));
         return dto;
     }
 }

@@ -1,5 +1,7 @@
 package lt.liutikas.todoapi.controller;
 
+import lt.liutikas.todoapi.dto.CreatePersonDto;
+import lt.liutikas.todoapi.dto.VerifyUserDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
@@ -31,7 +33,7 @@ public class UserController {
 
     @PostMapping("/verify")
     @ResponseStatus(HttpStatus.OK)
-    public boolean verify(@RequestBody User user) {
+    public boolean verify(@RequestBody VerifyUserDto user) {
         return service.verify(user);
     }
 
@@ -53,7 +55,7 @@ public class UserController {
 
     @PostMapping("/person")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody Person person) {
+    public void create(@RequestBody CreatePersonDto person) {
         try {
             service.create(person);
         } catch (DuplicateEntityException e) {

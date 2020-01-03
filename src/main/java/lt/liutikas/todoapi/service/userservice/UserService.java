@@ -1,5 +1,7 @@
 package lt.liutikas.todoapi.service.userservice;
 
+import lt.liutikas.todoapi.dto.CreatePersonDto;
+import lt.liutikas.todoapi.dto.VerifyUserDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
@@ -9,14 +11,14 @@ import lt.liutikas.todoapi.model.User;
 import java.util.List;
 
 public interface UserService {
-    boolean verify(User user);
+    boolean verify(VerifyUserDto user);
 
     User findUser(String username) throws EntityNotFoundException;
 
     User findUser(long id) throws EntityNotFoundException;
 
 
-    void create(Person person) throws DuplicateEntityException;
+    void create(CreatePersonDto person) throws DuplicateEntityException;
 
     void create(Company company) throws DuplicateEntityException;
 

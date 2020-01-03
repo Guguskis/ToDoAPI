@@ -21,4 +21,8 @@ public interface ProjectService {
     List<Project> find(String username) throws EntityNotFoundException;
 
     List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException;
+
+    void delete(long id);
+
+    void update(SimplifiedProjectDto project) throws EntityNotFoundException;
 }

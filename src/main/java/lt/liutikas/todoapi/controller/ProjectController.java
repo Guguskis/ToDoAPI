@@ -9,9 +9,11 @@ import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Project;
 import lt.liutikas.todoapi.service.projectservice.ProjectService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,7 +33,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody CreateProjectDto dto) {
         try {
             service.create(dto);
@@ -74,6 +76,22 @@ public class ProjectController {
     public List<SimplifiedProjectDto> findProjects(@PathVariable String username) {
         try {
             return service.findProjects(username);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable long id) {
+        service.delete(id);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody SimplifiedProjectDto project) {
+        try {
+            service.update(project);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

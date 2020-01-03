@@ -1,5 +1,7 @@
 package lt.liutikas.todoapi.service.userservice;
 
+import lt.liutikas.todoapi.dto.CreatePersonDto;
+import lt.liutikas.todoapi.dto.VerifyUserDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
@@ -21,7 +23,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public boolean verify(User userToVerify) {
+    public boolean verify(VerifyUserDto userToVerify) {
         try {
             User userInDatabase = findUser(userToVerify.getUsername());
             return verificationIsSuccessful(userToVerify, userInDatabase);
@@ -53,12 +55,23 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void create(Person person) throws DuplicateEntityException {
+    public void create(CreatePersonDto dto) throws DuplicateEntityException {
         try {
-            userRepository.save(person);
+            userRepository.save(getPerson(dto));
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntityException("Username is taken");
         }
+    }
+
+    private Person getPerson(CreatePersonDto dto) {
+        Person person = new Person();
+        person.setUsername(dto.getUsername());
+        person.setPassword(dto.getPassword());
+        person.setLastName(dto.getLastName());
+        person.setFirstName(dto.getFirstName());
+        person.setPhone(dto.getPhone());
+        person.setEmail(dto.getEmail());
+        return person;
     }
 
     @Override
@@ -85,7 +98,7 @@ public class DefaultUserService implements UserService {
         userRepository.save(company);
     }
 
-    private boolean verificationIsSuccessful(User user, User userInDatabase) {
+    private boolean verificationIsSuccessful(VerifyUserDto user, User userInDatabase) {
         return user.getUsername().equals(userInDatabase.getUsername())
                 && user.getPassword().equals(userInDatabase.getPassword());
     }

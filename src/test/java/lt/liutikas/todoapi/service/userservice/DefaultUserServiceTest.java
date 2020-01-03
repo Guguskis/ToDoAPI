@@ -1,5 +1,6 @@
 package lt.liutikas.todoapi.service.userservice;
 
+import lt.liutikas.todoapi.dto.VerifyUserDto;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,10 @@ class DefaultUserServiceTest {
                 .thenAnswer((Answer<User>) invocationOnMock ->
                         new User(username, password));
 
-        boolean actual = service.verify(new User(username, password));
+        VerifyUserDto user = new VerifyUserDto();
+        user.setUsername(username);
+        user.setPassword(password);
+        boolean actual = service.verify(user);
 
         assertTrue(actual);
     }
@@ -45,7 +49,10 @@ class DefaultUserServiceTest {
                 .thenAnswer((Answer<User>) invocationOnMock ->
                         new User(username, correctPassword));
 
-        boolean actual = service.verify(new User(username, incorrectPassword));
+        VerifyUserDto user = new VerifyUserDto();
+        user.setUsername(username);
+        user.setPassword(incorrectPassword);
+        boolean actual = service.verify(user);
 
         assertFalse(actual);
     }
@@ -57,7 +64,10 @@ class DefaultUserServiceTest {
         when(repository.findByUsername(username))
                 .thenAnswer(invocationOnMock -> null);
 
-        boolean actual = service.verify(new User(username, password));
+        VerifyUserDto user = new VerifyUserDto();
+        user.setUsername(username);
+        user.setPassword(password);
+        boolean actual = service.verify(user);
 
         assertFalse(actual);
     }
