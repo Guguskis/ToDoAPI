@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -142,14 +143,28 @@ public class DefaultProjectService implements ProjectService {
 
     @Override
     public List<SimplifiedProjectDto> findProjects(String username) throws EntityNotFoundException {
-        List<SimplifiedProjectDto> projectsDto = new ArrayList<>();
+        List<Project> userProjects = projectRepository
+                .findAll()
+                .stream()
+                .filter(projectContainsUser(username))
+                .collect(Collectors.toList());
 
-        User owner = userService.findUser(username);
-        List<Project> projects = projectRepository.findByOwnerId(owner.getId());
-        for (Project project : projects) {
+        List<SimplifiedProjectDto> projectsDto = new ArrayList<>();
+        for (Project project : userProjects) {
             projectsDto.add(getSimplifiedProjectDto(project));
         }
         return projectsDto;
+    }
+
+    private Predicate<Project> projectContainsUser(String username) {
+        return project -> {
+            for (User member : project.getMembers()) {
+                if (member.getUsername().trim().equals(username.trim())) {
+                    return true;
+                }
+            }
+            return false;
+        };
     }
 
     @Override

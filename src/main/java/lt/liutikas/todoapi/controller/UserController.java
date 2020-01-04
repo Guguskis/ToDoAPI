@@ -1,11 +1,12 @@
 package lt.liutikas.todoapi.controller;
 
 import lt.liutikas.todoapi.dto.CreatePersonDto;
+import lt.liutikas.todoapi.dto.UpdateCompanyDto;
+import lt.liutikas.todoapi.dto.UpdatePersonDto;
 import lt.liutikas.todoapi.dto.VerifyUserDto;
 import lt.liutikas.todoapi.exception.DuplicateEntityException;
 import lt.liutikas.todoapi.exception.EntityNotFoundException;
 import lt.liutikas.todoapi.model.Company;
-import lt.liutikas.todoapi.model.Person;
 import lt.liutikas.todoapi.model.User;
 import lt.liutikas.todoapi.service.userservice.UserService;
 import org.springframework.http.HttpStatus;
@@ -75,14 +76,22 @@ public class UserController {
 
     @PutMapping("/person")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody Person person) {
-        service.update(person);
+    public void update(@RequestBody UpdatePersonDto person) {
+        try {
+            service.update(person);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PutMapping("/company")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody Company company) {
-        service.update(company);
+    public void update(@RequestBody UpdateCompanyDto company) {
+        try {
+            service.update(company);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
 }
